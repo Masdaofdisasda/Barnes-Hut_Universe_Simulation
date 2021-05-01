@@ -59,28 +59,30 @@ public class AstroBody {
     // Hint: use the method drawAsDot implemented in Vector3 for this
     public void draw() {
 
-        double logRadius = 1e9 * Math.log10(radius);
+        double logRadius = 1e8 * Math.log10(radius);
         this.position.drawAsDot(logRadius, color);
     }
 
+    // siehe Vector3.java
     public boolean outOfBounds(){
-        if (position.outOfBounds()){
-            return true;
-        }
-        return false;
-    }
+        if (position.outOfBounds()){ return true; } return false; }
 
+    // siehe Vector3.java
+    public boolean outOfBounds(int depth, Vector3 center){ return position.outOfBounds(depth, center); }
+
+    // siehe Vector3.java
     public int checkIndex(Vector3 center){
         return position.checkIndex(center);
     }
 
-    // generates random astronomical bodies up to the size of a black hole
+    // erzeugt zufällige AstroBody Objekte
     public static AstroBody generateRandomBody() {
+        // todo wie sinnvoll sind die gewählten größen?
         double mass = Math.random()*10e32;
         double radius = Math.random()*10e4;
         Vector3 position = new Vector3(Math.random());
         Vector3 movement = new Vector3(Math.random());
-        Color color = new Color((int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256));
+        Color color = new Color((int) (128 + Math.random() * 128), (int) (128 +Math.random() * 128), (int) (128 +Math.random() * 128));
         return new AstroBody(mass, radius, position, movement, color);
     }
 }

@@ -1,3 +1,5 @@
+import com.sun.source.tree.BreakTree;
+
 import java.awt.*;
 
 public class Vector3 {
@@ -75,15 +77,28 @@ public class Vector3 {
         z /= norm;
     }
 
+    public String toString(){
+        return "(" + x + ", " + y + ", " + z + ")";
+    }
+
     // Draws a filled circle with a specified radius centered at the (x,y) coordinates of this vector
     // in the existing StdDraw canvas. The z-coordinate is not used.
     public void drawAsDot(double radius, Color color) {
 
-        //TODO: implement method.
-        //StdDraw.setPenColor(color);
-        //StdDraw.filledCircle(x, y, radius);
+        StdDraw.setPenColor(color);
+        StdDraw.filledCircle(x, y, radius);
     }
 
+    public void drawAsLine(int depth){
+        double bounds = Simulation.bounds / Math.pow(2,depth);
+
+        StdDraw.setPenColor(Color.white);
+        StdDraw.rectangle(x,y,bounds,bounds);
+
+        if (Simulation.debug){ StdDraw.text(x,y,"center:" + this.toString() + " bounds: " + bounds );}
+    }
+
+    // überprüft ob der Vektor innerhalb der globalen bounds liegt
     public boolean outOfBounds() {
         if (Math.abs(x) > Simulation.bounds || Math.abs(y) > Simulation.bounds || Math.abs(z) > Simulation.bounds) {
             return true;
@@ -91,7 +106,20 @@ public class Vector3 {
         return false;
     }
 
+    // überprüft ob der Vektor in den gegebenen bounds liegt
+    public boolean outOfBounds(int depth, Vector3 center){
+        double bounds = Simulation.bounds / Math.pow(2,depth);
+
+        if (Math.abs(center.x) > bounds || Math.abs(center.y) > bounds || Math.abs(center.z) > bounds) {
+            return true;
+        }
+        return false;
+    }
+
+
+    // liefert einen Index zwischen 0 und 7, der den Untersektor angibt in dem sich center befindet
     public int checkIndex(Vector3 center) {
+
         double centerX = center.x;
         double centerY = center.y;
         double centerZ = center.z;
@@ -112,28 +140,29 @@ public class Vector3 {
         }
     }
 
-    public Vector3 split(int index) {
 
-        // todo bounds berücksichtigen
+    // teilt den gegebenen Raum auf
+    public Vector3 split(int index, int depth) {
+
         Vector3 newCenter = new Vector3();
-        double bounds = Simulation.bounds;
+        double bounds = Simulation.bounds / Math.pow(2,depth);
 
         if (index <= 3) {
-            newCenter.z = (bounds - this.z) / 2;
+            newCenter.z = (bounds - this.z) ;
         } else {
-            newCenter.z = -(bounds - this.z) / 2;
+            newCenter.z = -(bounds - this.z) ;
         }
 
         if (index == 0 || index == 1 || index == 4 || index == 5) {
-            newCenter.y = (bounds - this.y) / 2;
+            newCenter.y = (bounds - this.y) ;
         } else {
-            newCenter.y = -(bounds - this.y) / 2;
+            newCenter.y = -(bounds - this.y) ;
         }
 
         if (index % 2 != 0){
-            newCenter.x = (bounds - this.x) / 2;
+            newCenter.x = (bounds - this.x) ;
         }else {
-            newCenter.x = -(bounds - this.x) / 2;
+            newCenter.x = -(bounds - this.x) ;
         }
 
         return newCenter;
