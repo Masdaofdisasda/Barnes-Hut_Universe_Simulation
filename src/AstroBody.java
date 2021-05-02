@@ -59,7 +59,7 @@ public class AstroBody {
     // Hint: use the method drawAsDot implemented in Vector3 for this
     public void draw() {
 
-        double logRadius = 1e8 * Math.log10(radius);
+        double logRadius = 1e7 * Math.log10(radius); // werte zwischen 1e9 und 1e7 funktionieren gut
         this.position.drawAsDot(logRadius, color);
     }
 
@@ -77,7 +77,7 @@ public class AstroBody {
 
     // erzeugt zufällige AstroBody Objekte
     public static AstroBody generateRandomBody() {
-        // todo wie sinnvoll sind die gewählten größen?
+        // todo sinnvolle masse vergeben
         double mass = Math.random()*10e32;
         double radius = Math.random()*10e4;
         Vector3 position = new Vector3(Math.random());

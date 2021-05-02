@@ -9,8 +9,18 @@ public class UniverseTree {
     private Vector3 center; // gibt die Koordinaten an, nachdem die 8 Unterknoten eingeteilt werden
     private int depth; // gibt die Tiefe des Knotens an, wird für die bounds Berechnung benötigt
 
+    //--------------------------------------------------------------------------------------------------------------//
+
     // Erzeugt einen neuen Unterbaum mit Knoten body
     private UniverseTree( AstroBody body){ root = body; }
+
+    // Erzeugt einen neuen Unterbaum mit Knoten body
+    private UniverseTree( AstroBody body, int index,  int depthOfParent, UniverseTree parentNode){
+        root = body;
+        center = parentNode.center.split(index, depth + 1);
+        depth = depthOfParent + 1;
+        parent = parentNode;
+    }
 
     // Erzeugt einen neuen, leeren Baum mit dem Ursprung des Koordinatensystems
     public UniverseTree(){
@@ -43,6 +53,7 @@ public class UniverseTree {
             int index = body.checkIndex(center);
             children = new UniverseTree[8];
             createSubtreeAtChild(index, body);
+            //children[index] = new UniverseTree(body, index, depth, this);
 
             // 2 - verschiebe root body in einen Unterbaum
             AstroBody removedBody = root;
@@ -61,9 +72,12 @@ public class UniverseTree {
 
             // Unterbaum ist frei
             }else { createSubtreeAtChild(index, body);
+                //children[index] = new UniverseTree(body, index, depth, this);
+                return true;
             }
         }
 
+        System.out.println("this should not happen");
         return false;
     }
 

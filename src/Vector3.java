@@ -23,7 +23,7 @@ public class Vector3 {
 
         x = (Math.random() - 0.5) * seed * 10e10;
         y = (Math.random() - 0.5) * seed * 10e10;
-        z = 0;
+        z = (Math.random() - 0.5) * seed * 10e10;
     }
 
     // Returns the sum of this vector and vector 'v'.
@@ -84,6 +84,7 @@ public class Vector3 {
     // Draws a filled circle with a specified radius centered at the (x,y) coordinates of this vector
     // in the existing StdDraw canvas. The z-coordinate is not used.
     public void drawAsDot(double radius, Color color) {
+        radius = radius * Math.abs(z/1e10);
 
         StdDraw.setPenColor(color);
         StdDraw.filledCircle(x, y, radius);
@@ -148,21 +149,21 @@ public class Vector3 {
         double bounds = Simulation.bounds / Math.pow(2,depth);
 
         if (index <= 3) {
-            newCenter.z = (bounds - this.z) ;
+            newCenter.z = (this.z + bounds) ; // Front
         } else {
-            newCenter.z = -(bounds - this.z) ;
+            newCenter.z = (this.z - bounds) ; // Back
         }
 
         if (index == 0 || index == 1 || index == 4 || index == 5) {
-            newCenter.y = (bounds - this.y) ;
+            newCenter.y = (this.y + bounds) ; // Top
         } else {
-            newCenter.y = -(bounds - this.y) ;
+            newCenter.y = (this.y - bounds) ; // Bottom
         }
 
         if (index % 2 != 0){
-            newCenter.x = (bounds - this.x) ;
+            newCenter.x = (this.x + bounds) ; // Right
         }else {
-            newCenter.x = -(bounds - this.x) ;
+            newCenter.x = (this.x - bounds) ; // Left
         }
 
         return newCenter;
