@@ -77,26 +77,26 @@ public class Vector3 {
         z /= norm;
     }
 
+    // gibt die Koordinaten des Vektors zurück
     public String toString(){
         return "(" + x + ", " + y + ", " + z + ")";
     }
 
-    // Draws a filled circle with a specified radius centered at the (x,y) coordinates of this vector
-    // in the existing StdDraw canvas. The z-coordinate is not used.
+    // Zeichnet and der x,y Position einen Körper. Die z-Achse skaliert den Körper
     public void drawAsDot(double radius, Color color) {
-        radius = radius * Math.abs(z/1e10);
+        radius = radius * ((z-5e10)/2e10);
 
         StdDraw.setPenColor(color);
-        StdDraw.filledCircle(x, y, radius);
+        StdDraw.filledCircle(x, y, Math.abs(radius));
     }
 
+    // zeichnet im Debug mode die boundaries der Blattknoten
     public void drawAsLine(int depth){
         double bounds = Simulation.bounds / Math.pow(2,depth);
 
-        StdDraw.setPenColor(Color.white);
         StdDraw.rectangle(x,y,bounds,bounds);
 
-        if (Simulation.debug){ StdDraw.text(x,y,"center:" + this.toString() + " bounds: " + bounds );}
+        //StdDraw.text(x,y,"center:" + this.toString() + " bounds: " + bounds;
     }
 
     // überprüft ob der Vektor innerhalb der globalen bounds liegt
@@ -142,7 +142,7 @@ public class Vector3 {
     }
 
 
-    // teilt den gegebenen Raum auf
+    // verschiebt das center in die Richtung die index angibt
     public Vector3 split(int index, int depth) {
 
         Vector3 newCenter = new Vector3();

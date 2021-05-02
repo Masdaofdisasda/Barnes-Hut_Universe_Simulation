@@ -14,11 +14,11 @@ public class UniverseTree {
     // Erzeugt einen neuen Unterbaum mit Knoten body
     private UniverseTree( AstroBody body){ root = body; }
 
-    // Erzeugt einen neuen Unterbaum mit Knoten body
+    // Erzeugt einen neuen Unterbaum bei kind index mit body, neuer Tiefe und neuem center
     private UniverseTree( AstroBody body, int index,  int depthOfParent, UniverseTree parentNode){
         root = body;
-        center = parentNode.center.split(index, depth + 1);
         depth = depthOfParent + 1;
+        center = parentNode.center.split(index, depth);
         parent = parentNode;
     }
 
@@ -83,6 +83,7 @@ public class UniverseTree {
 
     // legt einen neuen Unterbaum bei kind index mit body, neuer Tiefe und neuem center an
      public void createSubtreeAtChild(int index, AstroBody body){
+        // todo in constructor umwandeln
          children[index] = new UniverseTree(body);
          children[index].depth = depth + 1;
          children[index].center = center.split(index, depth + 1);
@@ -95,6 +96,7 @@ public class UniverseTree {
 
     }
 
+    // Zeichnet root und wenn vorhanden alle children darunter
     public void drawSystem(){
 
         if (root != null){

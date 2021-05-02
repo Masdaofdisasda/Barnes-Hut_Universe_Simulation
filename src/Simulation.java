@@ -1,3 +1,5 @@
+import com.sun.source.tree.WhileLoopTree;
+
 import java.awt.*;
 
 public class Simulation {
@@ -11,7 +13,7 @@ public class Simulation {
     // simulation boundaries
     public static final double bounds = 5e10;
 
-    // Debug mode, nur mit wenig Körpern verwenden!
+    // Debug mode
     public static final boolean debug = false;
 
 
@@ -32,8 +34,17 @@ public class Simulation {
         for (int i = 0; i < numOfAstronomicalBodies; i++) {
             observableUniverse.addBody(AstroBody.generateRandomBody());
         }
-        observableUniverse.drawSystem();
-        StdDraw.show();
+
+        // Simulation Loop
+        while (true) {
+
+            //todo
+
+
+
+            observableUniverse.drawSystem();
+            StdDraw.show();
+        }
     }
 
 }

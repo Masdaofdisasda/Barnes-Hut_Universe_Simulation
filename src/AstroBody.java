@@ -7,6 +7,7 @@ public class AstroBody {
     private double radius;
     private Vector3 position; // position of the center.
     private Vector3 movement;
+    private Vector3 force;
     private final Color color; // for drawing the body.
 
     //Constructor
@@ -16,6 +17,7 @@ public class AstroBody {
         radius = initRadius; // in meter
         position = initPosition;
         movement = initMovement;
+        force = new Vector3(0,0,0);
         color = initColor;
     }
 
