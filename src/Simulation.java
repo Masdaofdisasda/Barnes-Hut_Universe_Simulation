@@ -2,6 +2,8 @@ import com.sun.source.tree.WhileLoopTree;
 
 import java.awt.*;
 
+// http://arborjs.org/docs/barnes-hut
+
 public class Simulation {
 
     // gravitational constant
@@ -12,6 +14,12 @@ public class Simulation {
 
     // simulation boundaries
     public static final double bounds = 5e10;
+
+    // Number of astronomical bodies
+    public static final int n = 10000;
+
+    // Barnes-Hut Threshold
+    public static final int T = 1;
 
     // Debug mode
     public static final boolean debug = false;
@@ -30,20 +38,46 @@ public class Simulation {
         //Create Simulation Data
         UniverseTree observableUniverse = new UniverseTree();
 
-        int numOfAstronomicalBodies = 10000;
-        for (int i = 0; i < numOfAstronomicalBodies; i++) {
+        for (int i = 0; i < n; i++) {
             observableUniverse.addBody(AstroBody.generateRandomBody());
         }
+
+
+        double seconds = 0;
 
         // Simulation Loop
         while (true) {
 
             //todo
 
+            seconds++; // each iteration computes the movement of the celestial bodies within one second.
 
+            // for each body (with index i): compute the total force exerted on it.
+            /*for (int i = 0; i < SolarSystem.size(); i++) {
+                SolarSystem.get(i).MyResetForce();
+                for (int j = 0; j < SolarSystem.size(); j++) {
+                    if (i == j) continue;
+                    Vector3 forceToAdd = SolarSystem.get(i).gravitationalForce(SolarSystem.get(j));
+                    SolarSystem.get(i).MyUpdateForce(forceToAdd);
+                }
+            }*/
+            // now SolarSystem.get(i).force holds the force vector exerted on body with index i.
 
-            observableUniverse.drawSystem();
-            StdDraw.show();
+            // for each body (with index i): move it according to the total force exerted on it.
+            /*for (int i = 0; i < SolarSystem.size(); i++) {
+                SolarSystem.get(i).move();
+            }*/
+
+            // show all movements in StdDraw canvas only every 3 hours (to speed up the simulation)
+            if (seconds % (3 * 3600) == 0) {
+                // clear old positions (exclude the following line if you want to draw orbits).
+                StdDraw.clear(StdDraw.BLACK);
+
+                // draw new positions
+                observableUniverse.drawSystem();
+
+                StdDraw.show();
+            }
         }
     }
 

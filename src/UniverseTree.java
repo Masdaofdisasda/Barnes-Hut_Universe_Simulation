@@ -5,28 +5,33 @@ public class UniverseTree {
     private UniverseTree[] children; // stellt die 8 Kindsknoten des Octrees dar
     private UniverseTree parent; // übergeordneter Knoten, wird für das Traversieren und Positionsupdaten benötigt
 
-    // speichert räumliche lage
+    // speichert Simulationsdaten
     private Vector3 center; // gibt die Koordinaten an, nachdem die 8 Unterknoten eingeteilt werden
     private int depth; // gibt die Tiefe des Knotens an, wird für die bounds Berechnung benötigt
+    private Vector3 centerOfMass; // gibt das gewichtete Zentrum des Gesamtgewichts an
+    private double totalMass; // gibt das Gesamtgewicht an
 
     //--------------------------------------------------------------------------------------------------------------//
-
-    // Erzeugt einen neuen Unterbaum mit Knoten body
-    private UniverseTree( AstroBody body){ root = body; }
-
-    // Erzeugt einen neuen Unterbaum bei kind index mit body, neuer Tiefe und neuem center
-    private UniverseTree( AstroBody body, int index,  int depthOfParent, UniverseTree parentNode){
-        root = body;
-        depth = depthOfParent + 1;
-        center = parentNode.center.split(index, depth);
-        parent = parentNode;
-    }
 
     // Erzeugt einen neuen, leeren Baum mit dem Ursprung des Koordinatensystems
     public UniverseTree(){
         center = new Vector3(0,0,0);
         depth = 0;
+        totalMass = 0;
     }
+
+    // Erzeugt einen neuen Unterbaum bei kind index mit body, neuer Tiefe und neuem center
+    private UniverseTree( AstroBody body, int index, UniverseTree parentNode){
+        root = body;
+        parent = parentNode;
+        depth = parent.depth + 1;
+        center = parent.center.split(index, depth);
+        parent.children[index] = this;
+        totalMass = body.getMass();
+        centerOfMass = body.getPosition();
+    }
+
+    //--------------------------------------------------------------------------------------------------------------//
 
     // Fügt einen neuen body in den Baum ein
     // returns false wenn body null, out of bounds oder schon vorhanden ist
@@ -40,6 +45,8 @@ public class UniverseTree {
         //Baum ist leer -> erster Eintrag im Baum
         if (root == null && children == null){
             root = body;
+            totalMass += body.getMass();
+            centerOfMass = body.getPosition();
             return true;
 
         // Baum enthält einen body / ist ein Blatt
@@ -52,12 +59,14 @@ public class UniverseTree {
             // 1 - füge neuen body in einem Unterbaum ein
             int index = body.checkIndex(center);
             children = new UniverseTree[8];
-            createSubtreeAtChild(index, body);
-            //children[index] = new UniverseTree(body, index, depth, this);
+            new UniverseTree(body, index, this);
+            totalMass += body.getMass();
+
 
             // 2 - verschiebe root body in einen Unterbaum
             AstroBody removedBody = root;
             root = null;
+            totalMass -= removedBody.getMass();
             return addBody(removedBody);
 
         // Baum enthält Unterbäume / Nachfolger
@@ -68,11 +77,13 @@ public class UniverseTree {
 
             // Unterbaum ist schon besetzt
             if (children[index] != null) {
+                totalMass += body.getMass();
                 return children[index].addBody(body);
 
             // Unterbaum ist frei
-            }else { createSubtreeAtChild(index, body);
-                //children[index] = new UniverseTree(body, index, depth, this);
+            }else {
+                children[index] = new UniverseTree(body, index, this);
+                totalMass += body.getMass();
                 return true;
             }
         }
@@ -81,14 +92,9 @@ public class UniverseTree {
         return false;
     }
 
-    // legt einen neuen Unterbaum bei kind index mit body, neuer Tiefe und neuem center an
-     public void createSubtreeAtChild(int index, AstroBody body){
-        // todo in constructor umwandeln
-         children[index] = new UniverseTree(body);
-         children[index].depth = depth + 1;
-         children[index].center = center.split(index, depth + 1);
-         children[index].parent = this;
-     }
+    private Vector3 updateCenterOfMas(){
+
+    }
 
      // überprüft body auf neue Postion
     public void updatePosition(){

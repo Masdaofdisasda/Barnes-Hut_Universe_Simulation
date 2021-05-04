@@ -21,6 +21,9 @@ public class AstroBody {
         color = initColor;
     }
 
+    public double getMass(){ return  mass; }
+    public Vector3 getPosition(){ return position; }
+
     // Returns the distance between this body and the specified 'body'.
     public double distanceTo(AstroBody body) {
 
@@ -81,6 +84,7 @@ public class AstroBody {
     public static AstroBody generateRandomBody() {
         // todo sinnvolle masse vergeben
         double mass = Math.random()*10e32;
+        // double mass = 1; // wenn totalMass = n, stimmt mass Berechnung
         double radius = Math.random()*10e4;
         Vector3 position = new Vector3(Math.random());
         Vector3 movement = new Vector3(Math.random());
