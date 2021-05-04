@@ -77,6 +77,26 @@ public class Vector3 {
         z /= norm;
     }
 
+    public Vector3 weightedPosition(double[] masses, Vector3[] position){
+        if (masses == null){ return this; }
+
+        double x = 0;
+        double y = 0;
+        double z = 0;
+        int i = 0;
+        double mass = 0;
+
+        while (masses[i] != 0){
+            mass += masses[i];
+            x += masses[i]*position[i].x;
+            y += masses[i]*position[i].y;
+            z += masses[i]*position[i].z;
+            i++;
+        }
+        return new Vector3(x/mass, y/mass, z/mass);
+    }
+
+
     // gibt die Koordinaten des Vektors zurück
     public String toString(){
         return "(" + x + ", " + y + ", " + z + ")";

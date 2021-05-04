@@ -92,8 +92,25 @@ public class UniverseTree {
         return false;
     }
 
-    private Vector3 updateCenterOfMas(){
+    //todo
+    private Vector3 updateCenterOfMass{
+        if (children != null){
+            for (int i = 0; i < 8; i++) {
+                children[i].centerOfMass = children[i].updateCenterOfMass;
+            }
+        }
+        double[] masses = new double[8];
+        Vector3[] positions = new Vector3[8];
+        int j = 0;
 
+        for (int i = 0; i < 8; i++) {
+            if (children[i] != null) {
+                masses[j] = children[j].totalMass;
+                positions[j] = children[j].centerOfMass;
+                j++;
+            }
+        }
+        return
     }
 
      // überprüft body auf neue Postion
