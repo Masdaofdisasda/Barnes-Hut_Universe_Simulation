@@ -92,30 +92,39 @@ public class UniverseTree {
         return false;
     }
 
-    //todo
-    private Vector3 updateCenterOfMass{
-        if (children != null){
+    public Vector3 updateCenterOfMass(){
+
+        // Knoten ist ein Blatt
+        if (root != null){
+            return centerOfMass = root.getPosition();
+
+        // Knoten hat Kinder
+        }else {
+
+            // berechne rekursiv die Schwerpunkte der inneren Knoten
             for (int i = 0; i < 8; i++) {
-                children[i].centerOfMass = children[i].updateCenterOfMass;
+                if (children[i] == null){
+                    children[i].updateCenterOfMass();
+                }
             }
-        }
-        double[] masses = new double[8];
-        Vector3[] positions = new Vector3[8];
-        int j = 0;
 
-        for (int i = 0; i < 8; i++) {
-            if (children[i] != null) {
-                masses[j] = children[j].totalMass;
-                positions[j] = children[j].centerOfMass;
-                j++;
+            // berechne für diesen Knoten den Schwerpunkt
+            double[] masses = new double[8];
+            Vector3[] positions = new Vector3[8];
+            int j = 0;
+
+            // sammle Massen und Mittelpunkte
+            for (int i = 0; i < 8; i++) {
+                if (children[i] != null) {
+                    masses[j] = children[i].totalMass;
+                    positions[j] = children[i].centerOfMass;
+                    j++;
+                }
             }
-        }
-        return
-    }
 
-     // überprüft body auf neue Postion
-    public void updatePosition(){
-        // todo
+            return centerOfMass = Vector3.weightedPosition(masses, positions);
+
+        }
 
     }
 

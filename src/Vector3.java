@@ -77,16 +77,15 @@ public class Vector3 {
         z /= norm;
     }
 
-    public Vector3 weightedPosition(double[] masses, Vector3[] position){
-        if (masses == null){ return this; }
+    public static Vector3 weightedPosition(double[] masses, Vector3[] position){
+        if (masses == null){ return null; }
 
         double x = 0;
         double y = 0;
         double z = 0;
-        int i = 0;
         double mass = 0;
 
-        while (masses[i] != 0){
+        for (int i = 0; i < masses.length; i++) {
             mass += masses[i];
             x += masses[i]*position[i].x;
             y += masses[i]*position[i].y;

@@ -41,6 +41,7 @@ public class Simulation {
         for (int i = 0; i < n; i++) {
             observableUniverse.addBody(AstroBody.generateRandomBody());
         }
+        observableUniverse.updateCenterOfMass();
 
 
         double seconds = 0;
