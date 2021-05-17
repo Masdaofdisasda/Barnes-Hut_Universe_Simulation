@@ -91,4 +91,8 @@ public class AstroBody {
         Color color = new Color((int) (128 + Math.random() * 128), (int) (128 +Math.random() * 128), (int) (128 +Math.random() * 128));
         return new AstroBody(mass, radius, position, movement, color);
     }
+
+    public Vector3 getForce(){
+        return force;
+    }
 }

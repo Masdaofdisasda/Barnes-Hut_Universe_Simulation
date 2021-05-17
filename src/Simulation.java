@@ -38,11 +38,23 @@ public class Simulation {
         //Create Simulation Data
         UniverseTree observableUniverse = new UniverseTree();
 
-        for (int i = 0; i < n; i++) {
+       /* for (int i = 0; i < n; i++) {
             observableUniverse.addBody(AstroBody.generateRandomBody());
         }
-        observableUniverse.updateCenterOfMass();
+        observableUniverse.updateCenterOfMass();*/
 
+
+
+        AstroBody[] bodies = new AstroBody[n];
+        for (int i = 0; i < n; i++) {
+            bodies[i] = AstroBody.generateRandomBody();
+        }
+
+
+        Vector3[] forceOnBody = new Vector3[n];
+        for (int i = 0; i < n; i++) {
+            forceOnBody[i] = bodies[i].getForce();
+        }
 
         double seconds = 0;
 
@@ -51,7 +63,23 @@ public class Simulation {
 
             //todo
 
+            UniverseTree tree = new UniverseTree();
+
+            for (int i = 0; i < n; i++) {
+                tree.addBody(bodies[i]);
+            }
+
+            for (int i = 0; i < n; i++) {
+                forceOnBody[i] = tree.updateForce(bodies[i]);
+            }
+
+            for (int i = 0; i < n; i++) {
+                bodies[i].move(forceOnBody[i]);
+            }
+
+
             seconds++; // each iteration computes the movement of the celestial bodies within one second.
+
 
             // for each body (with index i): compute the total force exerted on it.
             /*for (int i = 0; i < SolarSystem.size(); i++) {
@@ -68,6 +96,10 @@ public class Simulation {
             /*for (int i = 0; i < SolarSystem.size(); i++) {
                 SolarSystem.get(i).move();
             }*/
+            
+
+
+
 
             // show all movements in StdDraw canvas only every 3 hours (to speed up the simulation)
             if (seconds % (3 * 3600) == 0) {
@@ -75,7 +107,10 @@ public class Simulation {
                 StdDraw.clear(StdDraw.BLACK);
 
                 // draw new positions
-                observableUniverse.drawSystem();
+                //observableUniverse.drawSystem();
+                for (int i = 0; i < n; i++) {
+                    bodies[i].draw();
+                }
 
                 StdDraw.show();
             }

@@ -14,14 +14,14 @@ public class UniverseTree {
     //--------------------------------------------------------------------------------------------------------------//
 
     // Erzeugt einen neuen, leeren Baum mit dem Ursprung des Koordinatensystems
-    public UniverseTree(){
-        center = new Vector3(0,0,0);
+    public UniverseTree() {
+        center = new Vector3(0, 0, 0);
         depth = 0;
         totalMass = 0;
     }
 
     // Erzeugt einen neuen Unterbaum bei kind index mit body, neuer Tiefe und neuem center
-    private UniverseTree( AstroBody body, int index, UniverseTree parentNode){
+    private UniverseTree(AstroBody body, int index, UniverseTree parentNode) {
         root = body;
         parent = parentNode;
         depth = parent.depth + 1;
@@ -36,24 +36,30 @@ public class UniverseTree {
     // Fügt einen neuen body in den Baum ein
     // returns false wenn body null, out of bounds oder schon vorhanden ist
     // returns true wenn der body hinzugefügt wurde
-    public boolean addBody(AstroBody body){
+    public boolean addBody(AstroBody body) {
 
         // body ist leer oder out of bounds
-        if (body == null){ return false;}
-        if (body.outOfBounds()){ return false;}
+        if (body == null) {
+            return false;
+        }
+        if (body.outOfBounds()) {
+            return false;
+        }
 
         //Baum ist leer -> erster Eintrag im Baum
-        if (root == null && children == null){
+        if (root == null && children == null) {
             root = body;
             totalMass += body.getMass();
             centerOfMass = body.getPosition();
             return true;
 
-        // Baum enthält einen body / ist ein Blatt
-        }else if (root != null && children == null){
+            // Baum enthält einen body / ist ein Blatt
+        } else if (root != null && children == null) {
 
             // body schon vorhanden
-            if (root.equals(body)){ return false; }
+            if (root.equals(body)) {
+                return false;
+            }
 
 
             // 1 - füge neuen body in einem Unterbaum ein
@@ -69,8 +75,8 @@ public class UniverseTree {
             totalMass -= removedBody.getMass();
             return addBody(removedBody);
 
-        // Baum enthält Unterbäume / Nachfolger
-        }else if (root == null && children != null){
+            // Baum enthält Unterbäume / Nachfolger
+        } else if (root == null && children != null) {
 
             // füge neuen body in einem Unterbaum ein
             int index = body.checkIndex(center);
@@ -80,8 +86,8 @@ public class UniverseTree {
                 totalMass += body.getMass();
                 return children[index].addBody(body);
 
-            // Unterbaum ist frei
-            }else {
+                // Unterbaum ist frei
+            } else {
                 children[index] = new UniverseTree(body, index, this);
                 totalMass += body.getMass();
                 return true;
@@ -92,18 +98,18 @@ public class UniverseTree {
         return false;
     }
 
-    public Vector3 updateCenterOfMass(){
+    public Vector3 updateCenterOfMass() {
 
         // Knoten ist ein Blatt
-        if (root != null){
+        if (root != null) {
             return centerOfMass = root.getPosition();
 
-        // Knoten hat Kinder
-        }else {
+            // Knoten hat Kinder
+        } else {
 
             // berechne rekursiv die Schwerpunkte der inneren Knoten
             for (int i = 0; i < 8; i++) {
-                if (children[i] == null){
+                if (children[i] == null) {
                     children[i].updateCenterOfMass();
                 }
             }
@@ -129,22 +135,76 @@ public class UniverseTree {
     }
 
     // Zeichnet root und wenn vorhanden alle children darunter
-    public void drawSystem(){
+    public void drawSystem() {
 
-        if (root != null){
+        if (root != null) {
             root.draw();
         }
-        if ( Simulation.debug ){
+        if (Simulation.debug) {
             center.drawAsLine(depth);
         }
-        if (children != null){
+        if (children != null) {
             for (int i = 0; i < 7; i++) {
-                if (children[i] != null){
+                if (children[i] != null) {
                     children[i].drawSystem();
                 }
             }
         }
 
     }
+
+    public Vector3 updateForce(AstroBody body) {
+
+        //leerer Baum
+        if (root == null && children == null)
+            return null;
+
+
+        //Blatt aber gleicher Body
+        if (root != null && children == null && this.root == body) {
+            for (int i = 0; i < 7; i++) {
+                if (children[i] != null) {
+                    children[i].updateForce(body);
+                }
+            }
+        }
+
+
+        //Unterbäume/Nachfolger rekursiv weiter
+        if (children != null && root == null) {
+            for (int i = 0; i < 7; i++) {
+                if (children[i] != null) {
+                    children[i].updateForce(body);
+                }
+            }
+        }
+
+
+        //Blatt
+        if (root != null && children == null) {
+
+            double s = body.getPosition().length();
+            double d = centerOfMass.distanceTo(body.getPosition());
+            Vector3 force = new Vector3();
+
+            if (s/d < Simulation.T){
+
+            }
+
+
+            if (s/d > Simulation.T){
+                for (int i = 0; i < 7; i++) {
+                    if (children[i] != null) {
+                        children[i].updateForce(body);
+                    }
+                }
+            }
+        }
+
+
+
+    }
+
+
 }
 
