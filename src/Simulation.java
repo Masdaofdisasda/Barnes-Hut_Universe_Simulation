@@ -22,7 +22,7 @@ public class Simulation {
     public static final int T = 1;
 
     // Debug mode
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
 
 
@@ -32,8 +32,10 @@ public class Simulation {
         StdDraw.setCanvasSize(1000,1000);
         StdDraw.setXscale(-bounds, bounds);
         StdDraw.setYscale(-bounds, bounds);
-        StdDraw.enableDoubleBuffering();
+
         StdDraw.clear(StdDraw.BLACK);
+
+        StdDraw.enableDoubleBuffering();
 
         //Create Simulation Data
         UniverseTree observableUniverse = new UniverseTree();
@@ -42,8 +44,6 @@ public class Simulation {
             observableUniverse.addBody(AstroBody.generateRandomBody());
         }
         observableUniverse.updateCenterOfMass();*/
-
-
 
         AstroBody[] bodies = new AstroBody[n];
         for (int i = 0; i < n; i++) {
@@ -61,7 +61,8 @@ public class Simulation {
         // Simulation Loop
         while (true) {
 
-            //todo
+            seconds++; // each iteration computes the movement of the celestial bodies within one second.
+
 
             UniverseTree tree = new UniverseTree();
 
@@ -73,13 +74,19 @@ public class Simulation {
                 forceOnBody[i] = tree.updateForce(bodies[i]);
             }
 
+            tree.updateCenterOfMass();
+
             for (int i = 0; i < n; i++) {
                 bodies[i].move(forceOnBody[i]);
             }
 
+            UniverseTree newTree = new UniverseTree();
+            for (int i = 0; i < n; i++) {
+                newTree.addBody(bodies[i]);
+            }
 
-            seconds++; // each iteration computes the movement of the celestial bodies within one second.
 
+            newTree.updateCenterOfMass();
 
             // for each body (with index i): compute the total force exerted on it.
             /*for (int i = 0; i < SolarSystem.size(); i++) {
@@ -96,9 +103,6 @@ public class Simulation {
             /*for (int i = 0; i < SolarSystem.size(); i++) {
                 SolarSystem.get(i).move();
             }*/
-            
-
-
 
 
             // show all movements in StdDraw canvas only every 3 hours (to speed up the simulation)
@@ -107,10 +111,11 @@ public class Simulation {
                 StdDraw.clear(StdDraw.BLACK);
 
                 // draw new positions
-                //observableUniverse.drawSystem();
-                for (int i = 0; i < n; i++) {
+                newTree.drawSystem();
+
+                /*for (int i = 0; i < n; i++) {
                     bodies[i].draw();
-                }
+                }*/
 
                 StdDraw.show();
             }

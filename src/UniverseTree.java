@@ -150,58 +150,78 @@ public class UniverseTree {
                 }
             }
         }
-
     }
 
+
+    //barnes Hut for calculating Force
     public Vector3 updateForce(AstroBody body) {
 
-        //leerer Baum
-        if (root == null && children == null)
+        //first attempt
+
+        //empty body or empty tree
+        if (root == null && children == null || this.root == body || body == null)
             return null;
 
+        double s = Simulation.bounds / (depth +1);
+        double d = body.getPosition().distanceTo(centerOfMass);
 
-        //Blatt aber gleicher Body
-        if (root != null && children == null && this.root == body) {
-            for (int i = 0; i < 7; i++) {
+        if ((s/d) < Simulation.T) {
+             Vector3 a = center.minus(body.getPosition());
+             double l = a.length();
+             a.normalize();
+             double force = Simulation.G * totalMass * body.getMass() / (l * l);
+             return a.times(force);
+
+        } else if (children!= null){
+            Vector3 j = new Vector3();
+
+            for (int i = 0; i < 8; i++) {
                 if (children[i] != null) {
-                    children[i].updateForce(body);
+              j = j.plus(children[i].updateForce(body));
+
                 }
             }
+            return j;
+
+            //return children[1].updateForce(body).plus(children[2].updateForce(body)).plus(children[3].updateForce(body)).plus(children[4].updateForce(body)).plus(children[5].updateForce(body)).plus(children[6].updateForce(body)).plus(children[7].updateForce(body));
         }
 
-
-        //Unterbäume/Nachfolger rekursiv weiter
-        if (children != null && root == null) {
-            for (int i = 0; i < 7; i++) {
-                if (children[i] != null) {
-                    children[i].updateForce(body);
-                }
-            }
-        }
-
+       /* //leerer Baum | root == body
+        if (root == null && children == null || this.root == body)
+            return null;
 
         //Blatt
         if (root != null && children == null) {
+            return body.gravitationalForce(root);
+        }
 
-            double s = body.getPosition().length();
-            double d = centerOfMass.distanceTo(body.getPosition());
-            Vector3 force = new Vector3();
+        //Unterbäume
+        if (children != null && root == null) {
 
-            if (s/d < Simulation.T){
+            //s is width of the region represented by this root
+            //d is the distance between the body and the node’s center-of-mass
+            double s = Simulation.bounds/(depth +1);
+            double d = body.getPosition().distanceTo(centerOfMass);
 
+            if ((s / d) < Simulation.T) {
+                return body.gravitationalForce(root);
             }
 
-
-            if (s/d > Simulation.T){
+            if ((s / d) > Simulation.T) {
                 for (int i = 0; i < 7; i++) {
                     if (children[i] != null) {
-                        children[i].updateForce(body);
+                        return children[i].updateForce(body);
                     }
                 }
             }
         }
 
 
+        //should not happen
+        return null;*/
+
+        Vector3 v = new Vector3();
+        return v;
 
     }
 
