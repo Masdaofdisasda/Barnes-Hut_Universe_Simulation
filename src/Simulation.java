@@ -22,14 +22,13 @@ public class Simulation {
     public static final int T = 1;
 
     // Debug mode
-    public static final boolean debug = true;
-
+    public static final boolean debug = false;
 
 
     public static void main(String[] args) {
         //TODO: please use this class to run your simulation
 
-        StdDraw.setCanvasSize(1000,1000);
+        StdDraw.setCanvasSize(1000, 1000);
         StdDraw.setXscale(-bounds, bounds);
         StdDraw.setYscale(-bounds, bounds);
 
@@ -38,34 +37,20 @@ public class Simulation {
         StdDraw.enableDoubleBuffering();
 
         //Create Simulation Data
-        UniverseTree observableUniverse = new UniverseTree();
-
-       /* for (int i = 0; i < n; i++) {
-            observableUniverse.addBody(AstroBody.generateRandomBody());
-        }
-        observableUniverse.updateCenterOfMass();*/
-
         AstroBody[] bodies = new AstroBody[n];
         for (int i = 0; i < n; i++) {
             bodies[i] = AstroBody.generateRandomBody();
         }
-
 
         Vector3[] forceOnBody = new Vector3[n];
         for (int i = 0; i < n; i++) {
             forceOnBody[i] = bodies[i].getForce();
         }
 
-        double seconds = 0;
-
         // Simulation Loop
         while (true) {
 
-            seconds++; // each iteration computes the movement of the celestial bodies within one second.
-
-
             UniverseTree tree = new UniverseTree();
-
             for (int i = 0; i < n; i++) {
                 tree.addBody(bodies[i]);
             }
@@ -74,52 +59,16 @@ public class Simulation {
                 forceOnBody[i] = tree.updateForce(bodies[i]);
             }
 
-            tree.updateCenterOfMass();
-
             for (int i = 0; i < n; i++) {
                 bodies[i].move(forceOnBody[i]);
             }
 
-            UniverseTree newTree = new UniverseTree();
-            for (int i = 0; i < n; i++) {
-                newTree.addBody(bodies[i]);
-            }
+            // clear old positions (exclude the following line if you want to draw orbits).
+            StdDraw.clear(StdDraw.BLACK);
 
-
-            newTree.updateCenterOfMass();
-
-            // for each body (with index i): compute the total force exerted on it.
-            /*for (int i = 0; i < SolarSystem.size(); i++) {
-                SolarSystem.get(i).MyResetForce();
-                for (int j = 0; j < SolarSystem.size(); j++) {
-                    if (i == j) continue;
-                    Vector3 forceToAdd = SolarSystem.get(i).gravitationalForce(SolarSystem.get(j));
-                    SolarSystem.get(i).MyUpdateForce(forceToAdd);
-                }
-            }*/
-            // now SolarSystem.get(i).force holds the force vector exerted on body with index i.
-
-            // for each body (with index i): move it according to the total force exerted on it.
-            /*for (int i = 0; i < SolarSystem.size(); i++) {
-                SolarSystem.get(i).move();
-            }*/
-
-
-            // show all movements in StdDraw canvas only every 3 hours (to speed up the simulation)
-            if (seconds % (3 * 3600) == 0) {
-                // clear old positions (exclude the following line if you want to draw orbits).
-                StdDraw.clear(StdDraw.BLACK);
-
-                // draw new positions
-                newTree.drawSystem();
-
-                /*for (int i = 0; i < n; i++) {
-                    bodies[i].draw();
-                }*/
-
-                StdDraw.show();
-            }
+            // draw new positions
+            tree.drawSystem();
+            StdDraw.show();
         }
     }
-
 }

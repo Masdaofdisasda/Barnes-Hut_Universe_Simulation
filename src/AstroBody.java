@@ -48,6 +48,7 @@ public class AstroBody {
     // (Movement depends on the mass of this body, its current movement and the exerted force)
     // Hint: see simulation loop in Simulation.java to find out how this is done
     public void move(Vector3 force) {
+        if (force == null) return;
 
         Vector3 newPosition = force.times(1 / mass);
         newPosition = newPosition.plus(position);

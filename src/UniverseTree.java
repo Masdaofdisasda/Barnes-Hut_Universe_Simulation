@@ -156,58 +156,31 @@ public class UniverseTree {
     //barnes Hut for calculating Force
     public Vector3 updateForce(AstroBody body) {
 
-        //first attempt
-
-        //empty body or empty tree
+        //leerer Baum | root == body
         if (root == null && children == null || this.root == body || body == null)
-            return null;
-
-        double s = Simulation.bounds / (depth +1);
-        double d = body.getPosition().distanceTo(centerOfMass);
-
-        if ((s/d) < Simulation.T) {
-             Vector3 a = center.minus(body.getPosition());
-             double l = a.length();
-             a.normalize();
-             double force = Simulation.G * totalMass * body.getMass() / (l * l);
-             return a.times(force);
-
-        } else if (children!= null){
-            Vector3 j = new Vector3();
-
-            for (int i = 0; i < 8; i++) {
-                if (children[i] != null) {
-              j = j.plus(children[i].updateForce(body));
-
-                }
-            }
-            return j;
-
-            //return children[1].updateForce(body).plus(children[2].updateForce(body)).plus(children[3].updateForce(body)).plus(children[4].updateForce(body)).plus(children[5].updateForce(body)).plus(children[6].updateForce(body)).plus(children[7].updateForce(body));
-        }
-
-       /* //leerer Baum | root == body
-        if (root == null && children == null || this.root == body)
             return null;
 
         //Blatt
         if (root != null && children == null) {
-            return body.gravitationalForce(root);
+            return root.gravitationalForce(body);
         }
 
-        //Unterbäume
-        if (children != null && root == null) {
 
+        //Unterbäume
+        else if (children != null && root == null) {
             //s is width of the region represented by this root
             //d is the distance between the body and the node’s center-of-mass
-            double s = Simulation.bounds/(depth +1);
+            double s = Simulation.bounds / (depth + 1);
             double d = body.getPosition().distanceTo(centerOfMass);
 
             if ((s / d) < Simulation.T) {
-                return body.gravitationalForce(root);
+                Vector3 b1Tob2 = center.minus(body.getPosition());
+                double F = Simulation.G * (totalMass * body.getMass()) / (b1Tob2.length() * b1Tob2.length());
+                b1Tob2.normalize();
+                return b1Tob2.times(F);
             }
 
-            if ((s / d) > Simulation.T) {
+            else  {
                 for (int i = 0; i < 7; i++) {
                     if (children[i] != null) {
                         return children[i].updateForce(body);
@@ -216,15 +189,10 @@ public class UniverseTree {
             }
         }
 
-
         //should not happen
-        return null;*/
-
-        Vector3 v = new Vector3();
-        return v;
-
+        return null;
     }
-
-
 }
+
+
 
