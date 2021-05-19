@@ -19,12 +19,15 @@ public class Vector3 {
         z = initZ;
     }
 
-    public Vector3(double seed) {
+    public Vector3(double seed, boolean pos) {
+        double max = 5e8;
+        if (pos){ max = 2 * Simulation.bounds;}
 
-        x = (Math.random() - 0.5) * seed * 10e10;
-        y = (Math.random() - 0.5) * seed * 10e10;
-        z = (Math.random() - 0.5) * seed * 10e10;
+        x = (Math.random() - 0.5) * seed * max;
+        y = (Math.random() - 0.5) * seed * max;
+        z = (Math.random() - 0.5) * seed * max;
     }
+
 
     // Returns the sum of this vector and vector 'v'.
     public Vector3 plus(Vector3 v) {

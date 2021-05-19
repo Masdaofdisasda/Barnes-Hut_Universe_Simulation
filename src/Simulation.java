@@ -51,7 +51,7 @@ public class Simulation {
         }
 
         double seconds = 0;
-        int speed = 100; // 0 ist Echtzeit, höher ist langsamer
+        int speed = 1; // 1 ist Echtzeit, höher ist langsamer
 
         // Simulation Loop
         while (true) {

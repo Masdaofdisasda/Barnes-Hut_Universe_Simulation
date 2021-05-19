@@ -87,9 +87,8 @@ public class AstroBody {
         double mass = Math.random()*10e28;
         // double mass = 1; // wenn totalMass = n, stimmt mass Berechnung
         double radius = Math.random()*10e4;
-        Vector3 position = new Vector3(Math.random());
-        Vector3 movement = new Vector3(Math.random());
-        //movement.normalize();
+        Vector3 position = new Vector3(Math.random(), true);
+        Vector3 movement = new Vector3(Math.random(), false);
         Color color = new Color((int) (128 + Math.random() * 128), (int) (128 +Math.random() * 128), (int) (128 +Math.random() * 128));
         return new AstroBody(mass, radius, position, movement, color);
     }
