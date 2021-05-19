@@ -19,7 +19,7 @@ public class Simulation {
     public static final int n = 10000;
 
     // Barnes-Hut Threshold
-    public static final int T = 1;
+    public static final double T = 0.5;
 
     // Debug mode
     public static final boolean debug = false;
@@ -38,37 +38,48 @@ public class Simulation {
 
         //Create Simulation Data
         AstroBody[] bodies = new AstroBody[n];
+        UniverseTree observableUniverse = new UniverseTree();
         for (int i = 0; i < n; i++) {
             bodies[i] = AstroBody.generateRandomBody();
+            observableUniverse.addBody(bodies[i]);
         }
+        observableUniverse.updateCenterOfMass();
 
         Vector3[] forceOnBody = new Vector3[n];
         for (int i = 0; i < n; i++) {
             forceOnBody[i] = bodies[i].getForce();
         }
 
+        double seconds = 0;
+        int speed = 100; // 0 ist Echtzeit, höher ist langsamer
+
         // Simulation Loop
         while (true) {
 
-            UniverseTree tree = new UniverseTree();
-            for (int i = 0; i < n; i++) {
-                tree.addBody(bodies[i]);
+            if (seconds % speed == 0) {
+                UniverseTree tree = new UniverseTree();
+                observableUniverse.rebuild(tree);
+                observableUniverse.updateCenterOfMass();
+
+                for (int i = 0; i < n; i++) {
+                    forceOnBody[i] = observableUniverse.updateForce(bodies[i]);
+                }
+
+                for (int i = 0; i < n; i++) {
+                    bodies[i].move(forceOnBody[i]);
+                }
             }
 
-            for (int i = 0; i < n; i++) {
-                forceOnBody[i] = tree.updateForce(bodies[i]);
-            }
 
-            for (int i = 0; i < n; i++) {
-                bodies[i].move(forceOnBody[i]);
-            }
-
-            // clear old positions (exclude the following line if you want to draw orbits).
-            StdDraw.clear(StdDraw.BLACK);
 
             // draw new positions
-            tree.drawSystem();
-            StdDraw.show();
+            if (seconds % 1 == 0) {
+                // clear old positions (exclude the following line if you want to draw orbits).
+                StdDraw.clear(StdDraw.BLACK);
+                observableUniverse.drawSystem();
+                StdDraw.show();
+            }
+            seconds++;
         }
     }
 }

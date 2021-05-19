@@ -105,7 +105,7 @@ public class UniverseTree {
             return centerOfMass = root.getPosition();
 
             // Knoten hat Kinder
-        } else {
+        } else if (children != null){
 
             // berechne rekursiv die Schwerpunkte der inneren Knoten
             for (int i = 0; i < 8; i++) {
@@ -131,6 +131,7 @@ public class UniverseTree {
             return centerOfMass = Vector3.weightedPosition(masses, positions);
 
         }
+        return null;
 
     }
 
@@ -152,6 +153,21 @@ public class UniverseTree {
         }
     }
 
+    // Baut den Octree neu auf
+    public UniverseTree rebuild(UniverseTree rebuiltTree) {
+
+        if (root != null) {
+            rebuiltTree.addBody(root);
+        }
+        if (children != null) {
+            for (int i = 0; i < 7; i++) {
+                if (children[i] != null) {
+                    children[i].rebuild(rebuiltTree);
+                }
+            }
+        }
+        return rebuiltTree;
+    }
 
     //barnes Hut for calculating Force
     public Vector3 updateForce(AstroBody body) {
