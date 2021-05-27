@@ -24,12 +24,6 @@ public class AstroBody {
     public double getMass(){ return  mass; }
     public Vector3 getPosition(){ return position; }
 
-    // Returns the distance between this body and the specified 'body'.
-    public double distanceTo(AstroBody body) {
-
-        return this.position.distanceTo(body.position);     //Achtung, es gibt 2 distanceTo Methoden!
-    }
-
     //Returns a vector representing the gravitational force exerted by 'body' on this body.
     //The gravitational Force F is calculated by F = G*(m1*m2)/(r*r), with m1 and m2 being the masses of the objects
     //interacting, r being the distance between the centers of the masses and G being the gravitational constant.
@@ -74,22 +68,26 @@ public class AstroBody {
         if (position.outOfBounds()){ return true; } return false; }
 
     // siehe Vector3.java
-    public boolean outOfBounds(int depth, Vector3 center){ return position.outOfBounds(depth, center); }
-
-    // siehe Vector3.java
     public int checkIndex(Vector3 center){
         return position.checkIndex(center);
     }
 
     // erzeugt zufällige AstroBody Objekte
     public static AstroBody generateRandomBody() {
-        // todo sinnvolle masse vergeben
         double mass = Math.random()*10e28;
-        // double mass = 1; // wenn totalMass = n, stimmt mass Berechnung
         double radius = Math.random()*10e4;
-        Vector3 position = new Vector3(Math.random(), true);
-        Vector3 movement = new Vector3(Math.random(), false);
+        Vector3 position = Vector3.generatePosition(Math.random());
+        Vector3 movement = Vector3.generateMovement(Math.random());
         Color color = new Color((int) (128 + Math.random() * 128), (int) (128 +Math.random() * 128), (int) (128 +Math.random() * 128));
+        return new AstroBody(mass, radius, position, movement, color);
+    }
+    // erzeugt massive AstroBody Objekte
+    public static AstroBody generateBlackHole() {
+        double mass = (1+Math.random())*10e37; // 10e37 to 10e39 kg
+        double radius = Math.random()*10e5;
+        Vector3 position = Vector3.generatePosition(Math.random());
+        Vector3 movement = Vector3.generateMovement(Math.random());
+        Color color = new Color(128,0,128);
         return new AstroBody(mass, radius, position, movement, color);
     }
 

@@ -9,8 +9,7 @@ public class Vector3 {
     private double z;
 
     // Constructor
-    public Vector3() {
-    }
+    public Vector3(){}
 
     public Vector3(double initX, double initY, double initZ) {
 
@@ -19,14 +18,20 @@ public class Vector3 {
         z = initZ;
     }
 
-    public Vector3(double seed, boolean pos) {
-        double max = 5e8;
-        if (pos){ max = 2 * Simulation.bounds;}
-
+    private Vector3(double seed, double max) {
         x = (Math.random() - 0.5) * seed * max;
         y = (Math.random() - 0.5) * seed * max;
         z = (Math.random() - 0.5) * seed * max;
     }
+
+    public static Vector3 generatePosition(double seed){
+        return new Vector3(seed, 2 * Simulation.bounds);
+    }
+
+    public static Vector3 generateMovement(double seed){
+        return new Vector3(seed, 5e8);
+    }
+
 
 
     // Returns the sum of this vector and vector 'v'.
@@ -93,8 +98,8 @@ public class Vector3 {
             x += masses[i]*position[i].x;
             y += masses[i]*position[i].y;
             z += masses[i]*position[i].z;
-            i++;
         }
+
         return new Vector3(x/mass, y/mass, z/mass);
     }
 
@@ -106,7 +111,8 @@ public class Vector3 {
 
     // Zeichnet and der x,y Position einen Körper. Die z-Achse skaliert den Körper
     public void drawAsDot(double radius, Color color) {
-        radius = radius * ((z-5e10)/2e10);
+        double zScale = 1.5e10;   // 1e10-3e10
+        radius = radius * ((z-5e10)/zScale);
 
         StdDraw.setPenColor(color);
         StdDraw.filledCircle(x, y, Math.abs(radius));
@@ -124,16 +130,6 @@ public class Vector3 {
     // überprüft ob der Vektor innerhalb der globalen bounds liegt
     public boolean outOfBounds() {
         if (Math.abs(x) > Simulation.bounds || Math.abs(y) > Simulation.bounds || Math.abs(z) > Simulation.bounds) {
-            return true;
-        }
-        return false;
-    }
-
-    // überprüft ob der Vektor in den gegebenen bounds liegt
-    public boolean outOfBounds(int depth, Vector3 center){
-        double bounds = Simulation.bounds / Math.pow(2,depth);
-
-        if (Math.abs(center.x) > bounds || Math.abs(center.y) > bounds || Math.abs(center.z) > bounds) {
             return true;
         }
         return false;

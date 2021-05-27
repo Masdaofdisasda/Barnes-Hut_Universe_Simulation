@@ -10,6 +10,7 @@ public class UniverseTree {
     private int depth; // gibt die Tiefe des Knotens an, wird für die bounds Berechnung benötigt
     private Vector3 centerOfMass; // gibt das gewichtete Zentrum des Gesamtgewichts an
     private double totalMass; // gibt das Gesamtgewicht an
+    private int  count; // number of bodies in this tree;
 
     //--------------------------------------------------------------------------------------------------------------//
 
@@ -18,6 +19,7 @@ public class UniverseTree {
         center = new Vector3(0, 0, 0);
         depth = 0;
         totalMass = 0;
+        count = 0;
     }
 
     // Erzeugt einen neuen Unterbaum bei kind index mit body, neuer Tiefe und neuem center
@@ -29,6 +31,7 @@ public class UniverseTree {
         parent.children[index] = this;
         totalMass = body.getMass();
         centerOfMass = body.getPosition();
+        count = 1;
     }
 
     //--------------------------------------------------------------------------------------------------------------//
@@ -50,6 +53,7 @@ public class UniverseTree {
         if (root == null && children == null) {
             root = body;
             totalMass += body.getMass();
+            count++;
             centerOfMass = body.getPosition();
             return true;
 
@@ -67,13 +71,15 @@ public class UniverseTree {
             children = new UniverseTree[8];
             new UniverseTree(body, index, this);
             totalMass += body.getMass();
+            count++;
 
 
             // 2 - verschiebe root body in einen Unterbaum
             AstroBody removedBody = root;
             root = null;
             totalMass -= removedBody.getMass();
-            return addBody(removedBody);
+            count--;
+            return addBody(removedBody) && updateCenterOfMass();
 
             // Baum enthält Unterbäume / Nachfolger
         } else if (root == null && children != null) {
@@ -84,12 +90,15 @@ public class UniverseTree {
             // Unterbaum ist schon besetzt
             if (children[index] != null) {
                 totalMass += body.getMass();
-                return children[index].addBody(body);
+                count++;
+                return children[index].addBody(body) && updateCenterOfMass();
 
-                // Unterbaum ist frei
+            // Unterbaum ist frei
             } else {
                 children[index] = new UniverseTree(body, index, this);
                 totalMass += body.getMass();
+                updateCenterOfMass();
+                count++;
                 return true;
             }
         }
@@ -98,28 +107,24 @@ public class UniverseTree {
         return false;
     }
 
-    public Vector3 updateCenterOfMass() {
 
-        // Knoten ist ein Blatt
-        if (root != null) {
-            return centerOfMass = root.getPosition();
+    public boolean updateCenterOfMass(){
 
-            // Knoten hat Kinder
-        } else if (children != null){
-
-            // berechne rekursiv die Schwerpunkte der inneren Knoten
-            for (int i = 0; i < 8; i++) {
-                if (children[i] == null) {
-                    children[i].updateCenterOfMass();
-                }
-            }
-
-            // berechne für diesen Knoten den Schwerpunkt
-            double[] masses = new double[8];
-            Vector3[] positions = new Vector3[8];
+        // berechne für diesen Knoten den Schwerpunkt
+        if (children != null) {
             int j = 0;
 
-            // sammle Massen und Mittelpunkte
+            // zähle Kinder
+            for (int i = 0; i < 8; i++) {
+                if (children[i] != null) {
+                    j++;
+                }
+            }
+            double[] masses = new double[j];
+            Vector3[] positions = new Vector3[j];
+            j=0;
+
+            // sammle massen und Mittelpunkte
             for (int i = 0; i < 8; i++) {
                 if (children[i] != null) {
                     masses[j] = children[i].totalMass;
@@ -127,12 +132,15 @@ public class UniverseTree {
                     j++;
                 }
             }
-
-            return centerOfMass = Vector3.weightedPosition(masses, positions);
-
+            centerOfMass = Vector3.weightedPosition(masses, positions);
         }
-        return null;
 
+        // rekursiver Aufruf bis zur Wurzel
+        if (parent != null){
+            return parent.updateCenterOfMass();
+        }
+
+        return true;
     }
 
     // Zeichnet root und wenn vorhanden alle children darunter
@@ -152,6 +160,9 @@ public class UniverseTree {
             }
         }
     }
+
+    // gibt die Anzahl an Bodies zurück
+    public int getCount(){return count;}
 
     // Baut den Octree neu auf
     public UniverseTree rebuild(UniverseTree rebuiltTree) {
