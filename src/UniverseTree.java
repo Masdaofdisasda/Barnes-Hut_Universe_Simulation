@@ -143,6 +143,14 @@ public class UniverseTree {
         return true;
     }
 
+    public void addSolarSystem(){
+        Vector3 center = Vector3.generatePosition(Math.random());
+        addBody(AstroBody.generateSunBody(center));
+        for (int i = 0; i < 8; i++) {
+            addBody(AstroBody.generateOrthoBody(center));
+        }
+    }
+
     // Zeichnet root und wenn vorhanden alle children darunter
     public void drawSystem() {
 
@@ -219,6 +227,8 @@ public class UniverseTree {
         //should not happen
         return null;
     }
+
+
 }
 
 

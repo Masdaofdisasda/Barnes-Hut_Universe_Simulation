@@ -1,7 +1,5 @@
 import com.sun.source.tree.WhileLoopTree;
-
 import java.awt.*;
-
 // http://arborjs.org/docs/barnes-hut
 
 public class Simulation {
@@ -13,10 +11,13 @@ public class Simulation {
     public static final double bounds = 5e10;
 
     // Number of astronomical bodies
-    public static final int n = 10000;
+    public static final int n = 1;
 
     // Number of supermassive bodies
     public static final int blackHoles = 1;
+
+    // Number of solar system
+    public static final int solarSystems = 9;
 
     // Barnes-Hut Threshold
     public static final double T = 0.5;
@@ -24,11 +25,11 @@ public class Simulation {
     //Simulation speed  (1 for real time, higher means slower)
     public static final int speed = 1;
 
+    // spawns additional bodies (0 spawns nothing, 1 holds body count)
+    public static final double UniverseDecay = 0;
+
     // Debug mode
     public static final boolean debug = false;
-
-    // spawns additional bodies (0 spawns nothing, 1 holds body count)
-    public static final double UniverseDecay = 0.1;
 
     // Simulation
     public static void main(String[] args) {
@@ -47,6 +48,9 @@ public class Simulation {
         for (int i = 0; i < blackHoles; i++) {
             bodies[i] = AstroBody.generateBlackHole();
             observableUniverse.addBody(bodies[i]); }
+        for (int i = 0; i < solarSystems; i++) {
+            observableUniverse.addSolarSystem();
+        }
         for (int i = 0; i < n; i++) {
             bodies[i] = AstroBody.generateRandomBody();
             observableUniverse.addBody(bodies[i]); }
@@ -65,6 +69,7 @@ public class Simulation {
                 UniverseTree tree = new UniverseTree();
                 observableUniverse = observableUniverse.rebuild(tree);
 
+                // spawn additional bodies if desired
                 int lost = (int) ((n - observableUniverse.getCount()) * UniverseDecay);
                 for (int i = 0; i < lost; i++) {
                     observableUniverse.addBody(AstroBody.generateRandomBody());

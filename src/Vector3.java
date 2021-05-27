@@ -32,7 +32,13 @@ public class Vector3 {
         return new Vector3(seed, 5e8);
     }
 
+    public static Vector3 generateOrthoPos(Vector3 center) {
+        return new Vector3(center.x + Math.random() * 6e9,center.y,center.z);
+    }
 
+    public static Vector3 generateOrthoMov(){
+        return new Vector3(0, Math.random() * 5e8, 0);
+    }
 
     // Returns the sum of this vector and vector 'v'.
     public Vector3 plus(Vector3 v) {
