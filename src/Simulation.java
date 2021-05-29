@@ -11,19 +11,16 @@ public class Simulation {
     public static final double bounds = 5e10;
 
     // Number of astronomical bodies
-    public static final int n = 1;
+    public static final int n = 10000;
 
     // Number of supermassive bodies
-    public static final int blackHoles = 1;
+    public static final int blackHoles = 3;
 
     // Number of solar system
-    public static final int solarSystems = 9;
+    public static final int solarSystems = 8;
 
     // Barnes-Hut Threshold
     public static final double T = 0.5;
-
-    //Simulation speed  (1 for real time, higher means slower)
-    public static final int speed = 1;
 
     // spawns additional bodies (0 spawns nothing, 1 holds body count)
     public static final double UniverseDecay = 0;
@@ -42,30 +39,21 @@ public class Simulation {
         StdDraw.enableDoubleBuffering();
 
         //Create Simulation Data
-        AstroBody[] bodies = new AstroBody[n];
         UniverseTree observableUniverse = new UniverseTree();
 
         for (int i = 0; i < blackHoles; i++) {
-            bodies[i] = AstroBody.generateBlackHole();
-            observableUniverse.addBody(bodies[i]); }
+            observableUniverse.addBody(AstroBody.generateBlackHole()); }
         for (int i = 0; i < solarSystems; i++) {
-            observableUniverse.addSolarSystem();
-        }
+            observableUniverse.addSolarSystem(); }
         for (int i = 0; i < n; i++) {
-            bodies[i] = AstroBody.generateRandomBody();
-            observableUniverse.addBody(bodies[i]); }
-
-        Vector3[] forceOnBody = new Vector3[n];
-        for (int i = 0; i < n; i++) {
-            forceOnBody[i] = bodies[i].getForce();
-        }
+            observableUniverse.addBody(AstroBody.generateRandomBody()); }
 
         double seconds = 0;
 
         // Simulation Loop
         while (true) {
 
-            if (seconds % speed == 0) {
+            if (seconds % 1 == 0) {
                 UniverseTree tree = new UniverseTree();
                 observableUniverse = observableUniverse.rebuild(tree);
 
@@ -75,12 +63,12 @@ public class Simulation {
                     observableUniverse.addBody(AstroBody.generateRandomBody());
                 }
 
-                for (int i = 0; i < n; i++) {
-                    forceOnBody[i] = observableUniverse.updateForce(bodies[i]);
+                for (AstroBody body : observableUniverse) {
+                    body.setForce(observableUniverse.updateForce(body));
                 }
 
-                for (int i = 0; i < n; i++) {
-                    bodies[i].move(forceOnBody[i]);
+                for (AstroBody body : observableUniverse){
+                    body.move(body.getForce());
                 }
             }
 

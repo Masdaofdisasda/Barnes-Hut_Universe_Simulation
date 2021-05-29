@@ -1,4 +1,6 @@
-public class UniverseTree {
+import java.util.Stack;
+
+public class UniverseTree implements AstroBodyIterable{
 
     // speichert Baumstruktur
     private AstroBody root; // darf nur belegt sein, wenn der Baum ein Blatt ist
@@ -50,7 +52,7 @@ public class UniverseTree {
         }
 
         //Baum ist leer -> erster Eintrag im Baum
-        if (root == null && children == null) {
+        if (isEmpty()) {
             root = body;
             totalMass += body.getMass();
             count++;
@@ -226,6 +228,85 @@ public class UniverseTree {
 
         //should not happen
         return null;
+    }
+
+    public boolean isEmpty(){
+        if (root == null && children == null){ return true;}
+        return false;
+    }
+
+    @Override
+    public AstroBodyIterator iterator() { return new UniverseTreeIterator(); }
+
+    class UniverseTreeIterator implements AstroBodyIterator{
+
+        private Stack<Integer> index = new Stack<>();
+        private UniverseTree current;
+
+        @Override
+        public boolean hasNext() {
+            if (isEmpty()){ return false;}
+
+            // Tiefensuche
+            // erstes Element
+            if (index.isEmpty()) {
+                for (int i = 0; i < 8; i++) {
+                    if (children[i] != null) {
+                        index.push(i);
+                        current = children[i];
+                        i = 8;
+                    }
+                }
+                if (current.children == null){ return true; }
+                while (current.children != null) {
+                    for (int i = 0; i < 8; i++) {
+                        if (current.children[i] != null) {
+                            index.push(i);
+                            current = current.children[i];
+                            i = 8;
+                        }
+                    }
+                }
+                return true;
+
+            // Baum traversieren
+            }else {
+                current = current.parent;
+                while ( current.children != null){
+                    if (index.size() == 1 && !hasLeft()){ return false;} // current = root und alle Blattknoten durchsucht
+                    for (int i = index.pop() + 1; i < 8 ; i++) {
+                        if (current.children[i] != null) {
+                            index.push(i);
+                            current = current.children[i];
+                            if (current.children != null){index.push(-1);}
+                            i = 8;
+                        }
+                        if (i == 7){
+                            current = current.parent;
+                            i = 8;
+                        }
+                    }
+                 }
+                return true;
+            }
+
+        }
+
+        @Override
+        public AstroBody next() {
+            return current.root;
+        }
+
+        // gibt false zurück wenn alle Kinder null sind
+        private boolean hasLeft(){
+            int left = 0;
+            for (int i = index.peek() + 1; i < 8; i++) {
+                if (current.children[i] != null){ left++;}
+            }
+            if (left > 0){ return true;}
+            return false;
+        }
+
     }
 
 

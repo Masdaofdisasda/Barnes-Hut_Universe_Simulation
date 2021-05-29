@@ -23,6 +23,14 @@ public class AstroBody {
 
     public double getMass(){ return  mass; }
     public Vector3 getPosition(){ return position; }
+    public Vector3 getForce(){
+        return force;
+    }
+    public void setForce(Vector3 f){ force = f; }
+
+    public String toString(){
+        return "pos: " +  position;
+    }
 
     //Returns a vector representing the gravitational force exerted by 'body' on this body.
     //The gravitational Force F is calculated by F = G*(m1*m2)/(r*r), with m1 and m2 being the masses of the objects
@@ -109,9 +117,5 @@ public class AstroBody {
         Vector3 movement = Vector3.generateOrthoMov();
         Color color = new Color((int) (128 + Math.random() * 128), (int) (128 +Math.random() * 128), (int) (128 +Math.random() * 128));
         return new AstroBody(mass, radius, position, movement, color);
-    }
-
-    public Vector3 getForce(){
-        return force;
     }
 }
