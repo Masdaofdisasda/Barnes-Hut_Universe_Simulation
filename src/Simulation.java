@@ -14,10 +14,10 @@ public class Simulation {
     public static final int n = 10000;
 
     // Number of supermassive bodies
-    public static final int blackHoles = 3;
+    public static final int blackHoles = 0;
 
     // Number of solar system
-    public static final int solarSystems = 8;
+    public static final int solarSystems = 6;
 
     // Barnes-Hut Threshold
     public static final double T = 0.5;
@@ -41,12 +41,26 @@ public class Simulation {
         //Create Simulation Data
         UniverseTree observableUniverse = new UniverseTree();
 
+
         for (int i = 0; i < blackHoles; i++) {
             observableUniverse.addBody(AstroBody.generateBlackHole()); }
         for (int i = 0; i < solarSystems; i++) {
             observableUniverse.addSolarSystem(); }
         for (int i = 0; i < n; i++) {
             observableUniverse.addBody(AstroBody.generateRandomBody()); }
+
+        // Test bodies
+        /*
+        observableUniverse.addBody( new AstroBody(0,10e5,new Vector3(-bounds*0.5,bounds*0.5,1), new Vector3(0,0,0), Color.cyan));
+        observableUniverse.addBody( new AstroBody(1,10e5,new Vector3(bounds*0.5,bounds*0.5,1), new Vector3(0,0,0), Color.cyan));
+        observableUniverse.addBody( new AstroBody(2,10e5,new Vector3(-bounds*0.5,-bounds*0.5,1), new Vector3(0,0,0), Color.cyan));
+        observableUniverse.addBody( new AstroBody(3,10e5,new Vector3(bounds*0.2,-bounds*0.2,1), new Vector3(0,0,0), Color.cyan));
+        observableUniverse.addBody( new AstroBody(4,10e5,new Vector3(bounds*0.7,-bounds*0.7,1), new Vector3(0,0,0), Color.cyan));
+        observableUniverse.addBody( new AstroBody(5,10e5,new Vector3(bounds*0.6,-bounds*0.2,1), new Vector3(0,0,0), Color.cyan));
+        observableUniverse.addBody( new AstroBody(6,10e5,new Vector3(bounds*0.7,-bounds*0.3,1), new Vector3(0,0,0), Color.cyan));
+        observableUniverse.addBody( new AstroBody(7,10e5,new Vector3(bounds*0.8,-bounds*0.4,1), new Vector3(0,0,0), Color.cyan));
+         */
+
 
         double seconds = 0;
 

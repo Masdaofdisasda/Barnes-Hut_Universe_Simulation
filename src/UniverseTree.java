@@ -148,7 +148,7 @@ public class UniverseTree implements AstroBodyIterable{
     public void addSolarSystem(){
         Vector3 center = Vector3.generatePosition(Math.random());
         addBody(AstroBody.generateSunBody(center));
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i <= 8; i++) {
             addBody(AstroBody.generateOrthoBody(center));
         }
     }
@@ -163,7 +163,7 @@ public class UniverseTree implements AstroBodyIterable{
             center.drawAsLine(depth);
         }
         if (children != null) {
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < 8; i++) {
                 if (children[i] != null) {
                     children[i].drawSystem();
                 }
@@ -181,7 +181,7 @@ public class UniverseTree implements AstroBodyIterable{
             rebuiltTree.addBody(root);
         }
         if (children != null) {
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < 8; i++) {
                 if (children[i] != null) {
                     children[i].rebuild(rebuiltTree);
                 }
@@ -218,7 +218,7 @@ public class UniverseTree implements AstroBodyIterable{
             }
 
             else  {
-                for (int i = 0; i < 7; i++) {
+                for (int i = 0; i < 8; i++) {
                     if (children[i] != null) {
                         return children[i].updateForce(body);
                     }
@@ -274,6 +274,7 @@ public class UniverseTree implements AstroBodyIterable{
                 current = current.parent;
                 while ( current.children != null){
                     if (index.size() == 1 && !hasLeft()){ return false;} // current = root und alle Blattknoten durchsucht
+                    if (index.peek() == 7){ current = current.parent; }
                     for (int i = index.pop() + 1; i < 8 ; i++) {
                         if (current.children[i] != null) {
                             index.push(i);

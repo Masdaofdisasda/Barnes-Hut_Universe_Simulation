@@ -29,7 +29,7 @@ public class AstroBody {
     public void setForce(Vector3 f){ force = f; }
 
     public String toString(){
-        return "pos: " +  position;
+        return "mass: " + mass + " " +"pos: " +  position;
     }
 
     //Returns a vector representing the gravitational force exerted by 'body' on this body.
