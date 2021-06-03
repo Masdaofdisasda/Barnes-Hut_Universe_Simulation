@@ -109,16 +109,9 @@ public class Vector3 {
 
     // Zeichnet and der x,y Position einen Körper. Die z-Achse skaliert den Körper
     public void drawAsDot(double radius, Color color) {
-        //double zScale = 1.5e10;   // 1e10-3e10
-        //radius = radius * ((z-5e10)/zScale);
 
-
-        double min = 2e7;
-        double max = 2e10;
-        double k = (max-min)/(1e11);
-        double d = max-k*Simulation.bounds;
-        double zScale = k*z+d;
-        radius = (radius /10e5) * zScale ; //2e7;
+        double zScale = 1.9e-8*z+1050;
+        radius = radius * zScale ; //2e7;
 
         StdDraw.setPenColor(color);
         StdDraw.filledCircle(x, y, Math.abs(radius));

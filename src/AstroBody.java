@@ -65,11 +65,7 @@ public class AstroBody {
     // The radius of the dot is in relation to the radius of the celestial body
     // (use a conversion based on the logarithm as in 'Simulation.java').
     // Hint: use the method drawAsDot implemented in Vector3 for this
-    public void draw() {
-
-        double logRadius = 1e7 * Math.log10(radius); // werte zwischen 1e9 und 1e7 funktionieren gut
-        this.position.drawAsDot(logRadius, color);
-    }
+    public void draw() { this.position.drawAsDot(radius, color); }
 
     // siehe Vector3.java
     public boolean outOfBounds(){
@@ -93,20 +89,20 @@ public class AstroBody {
     // erzeugt massive AstroBody Objekte
     public static AstroBody generateBlackHole() {
         double mass = (1+Math.random())*10e37; // 10e37 to 10e39 kg
-        double radius = Math.random()*10e5;
+        double radius = 10e5;
         Vector3 position = Vector3.generatePosition();
         Vector3 movement = new Vector3(Math.random(),Math.random(),Math.random());
-        Color color = new Color(255,0,255);
+        Color color = new Color(100,0,100);
         return new AstroBody(mass, radius, position, movement, color);
     }
 
     // erzeugt Sonnen
     public static AstroBody generateSunBody(Vector3 center) {
         double mass = 1.989 * 10e30;
-        double radius = 6.96e6;
+        double radius = 4e5; //6.96e6
         Vector3 position = center;
         Vector3 movement = Vector3.generateMovement();
-        Color color = new Color(255,255,0);
+        Color color = new Color(255,255,100);
         return new AstroBody(mass, radius, position, movement, color);
     }
     // erzeugt orthognoale AstroBody Objekte

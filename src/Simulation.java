@@ -40,21 +40,7 @@ public class Simulation {
 
         //Create Simulation Data
         UniverseTree observableUniverse = new UniverseTree();
-
         observableUniverse.generateUniverse(n,blackHoles,solarSystems);
-
-        // Test bodies
-        /*
-        observableUniverse.addBody( new AstroBody(0,10e5,new Vector3(-bounds*0.5,bounds*0.5,1), new Vector3(0,0,0), Color.cyan));
-        observableUniverse.addBody( new AstroBody(1,10e5,new Vector3(bounds*0.5,bounds*0.5,1), new Vector3(0,0,0), Color.cyan));
-        observableUniverse.addBody( new AstroBody(2,10e5,new Vector3(-bounds*0.5,-bounds*0.5,1), new Vector3(0,0,0), Color.cyan));
-        observableUniverse.addBody( new AstroBody(3,10e5,new Vector3(bounds*0.2,-bounds*0.2,1), new Vector3(0,0,0), Color.cyan));
-        observableUniverse.addBody( new AstroBody(4,10e5,new Vector3(bounds*0.7,-bounds*0.7,1), new Vector3(0,0,0), Color.cyan));
-        observableUniverse.addBody( new AstroBody(5,10e5,new Vector3(bounds*0.6,-bounds*0.2,1), new Vector3(0,0,0), Color.cyan));
-        observableUniverse.addBody( new AstroBody(6,10e5,new Vector3(bounds*0.7,-bounds*0.3,1), new Vector3(0,0,0), Color.cyan));
-        observableUniverse.addBody( new AstroBody(7,10e5,new Vector3(bounds*0.8,-bounds*0.4,1), new Vector3(0,0,0), Color.cyan));
-         */
-
 
         double seconds = 0;
 
@@ -62,6 +48,7 @@ public class Simulation {
         while (true) {
 
             if (seconds % 1 == 0) {
+                // rebuild tree structure
                 UniverseTree tree = new UniverseTree();
                 observableUniverse = observableUniverse.rebuild(tree);
 
@@ -71,13 +58,11 @@ public class Simulation {
                     observableUniverse.addBody(AstroBody.generateRandomBody());
                 }
 
+                // do physics calculations
                 for (AstroBody body : observableUniverse) {
-                    body.setForce(observableUniverse.updateForce(body));
-                }
-
+                    body.setForce(observableUniverse.updateForce(body)); }
                 for (AstroBody body : observableUniverse){
-                    body.move(body.getForce());
-                }
+                    body.move(body.getForce()); }
             }
 
 
@@ -87,7 +72,7 @@ public class Simulation {
                 // clear old positions (exclude the following line if you want to draw orbits).
                 StdDraw.clear(StdDraw.BLACK);
                 observableUniverse.drawSystem();
-                StdDraw.text(Simulation.bounds * -0.9,Simulation.bounds * -0.9,"Bodies: "+ observableUniverse.getCount());
+                StdDraw.text(Simulation.bounds * -0.8,Simulation.bounds * -0.9,"Bodies: "+ observableUniverse.getCount());
                 StdDraw.show();
             }
             seconds++;

@@ -146,15 +146,9 @@ public class UniverseTree implements AstroBodyIterable{
     }
 
     public void generateUniverse(int AstroBodies, int BlackHoles, int solarSystems){
-        for (int i = 0; i < solarSystems; i++) {
-            addSolarSystem();
-        }
-        for (int i = 0; i < BlackHoles; i++) {
-            addBody(AstroBody.generateBlackHole());
-        }
-        for (int i = 0; i < AstroBodies; i++) {
-            addBody(AstroBody.generateRandomBody());
-        }
+        for (int i = 0; i < solarSystems; i++) { addSolarSystem(); }
+        for (int i = 0; i < BlackHoles; i++) { addBody(AstroBody.generateBlackHole()); }
+        for (int i = 0; i < AstroBodies; i++) { addBody(AstroBody.generateRandomBody()); }
     }
 
     private void addSolarSystem(){
@@ -242,6 +236,7 @@ public class UniverseTree implements AstroBodyIterable{
         return null;
     }
 
+    // gibt true zurück wenn der Baum leer ist
     public boolean isEmpty(){
         if (root == null && children == null){ return true;}
         return false;
@@ -250,6 +245,7 @@ public class UniverseTree implements AstroBodyIterable{
     @Override
     public AstroBodyIterator iterator() { return new UniverseTreeIterator(); }
 
+    // Iteriert den Baum von Index 0 bis 7 mit Tiefensuche durch und gibt Bodies zurück
     class UniverseTreeIterator implements AstroBodyIterator{
 
         private Stack<Integer> index = new Stack<>();
@@ -260,8 +256,7 @@ public class UniverseTree implements AstroBodyIterable{
             if (isEmpty()){ return false;}
 
             // Tiefensuche
-            // erstes Element
-            if (index.isEmpty()) {
+            if (index.isEmpty()) { // erstes Element
                 for (int i = 0; i < 8; i++) {
                     if (children[i] != null) {
                         index.push(i);
@@ -269,7 +264,7 @@ public class UniverseTree implements AstroBodyIterable{
                         i = 8;
                     }
                 }
-                if (current.children == null){ return true; }
+                if (current.children == null){ return true; } // keine Kinder
                 while (current.children != null) {
                     for (int i = 0; i < 8; i++) {
                         if (current.children[i] != null) {
@@ -281,12 +276,12 @@ public class UniverseTree implements AstroBodyIterable{
                 }
                 return true;
 
-            // Baum traversieren
+            // Baum traversieren (current ist irgendwo im Baum)
             }else {
                 current = current.parent;
                 while ( current.children != null){
-                    if (index.size() == 1 && !hasLeft()){ return false;} // current = root und alle Blattknoten durchsucht
-                    if (index.peek() == 7){ current = current.parent; }
+                    if (index.size() == 1 && !hasLeft()){ return false;} // alle Knoten besucht
+                    if (index.peek() == 7){ current = current.parent; } // index 7 (Schleife wird übersprungen)
                     for (int i = index.pop() + 1; i < 8 ; i++) {
                         if (current.children[i] != null) {
                             index.push(i);
@@ -312,11 +307,9 @@ public class UniverseTree implements AstroBodyIterable{
 
         // gibt false zurück wenn alle Kinder null sind
         private boolean hasLeft(){
-            int left = 0;
             for (int i = index.peek() + 1; i < 8; i++) {
-                if (current.children[i] != null){ left++;}
+                if (current.children[i] != null){ return true;}
             }
-            if (left > 0){ return true;}
             return false;
         }
 
