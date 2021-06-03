@@ -41,13 +41,7 @@ public class Simulation {
         //Create Simulation Data
         UniverseTree observableUniverse = new UniverseTree();
 
-
-        for (int i = 0; i < blackHoles; i++) {
-            observableUniverse.addBody(AstroBody.generateBlackHole()); }
-        for (int i = 0; i < solarSystems; i++) {
-            observableUniverse.addSolarSystem(); }
-        for (int i = 0; i < n; i++) {
-            observableUniverse.addBody(AstroBody.generateRandomBody()); }
+        observableUniverse.generateUniverse(n,blackHoles,solarSystems);
 
         // Test bodies
         /*

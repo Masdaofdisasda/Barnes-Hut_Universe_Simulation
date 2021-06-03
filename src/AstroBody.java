@@ -84,8 +84,8 @@ public class AstroBody {
     public static AstroBody generateRandomBody() {
         double mass = Math.random()*10e28;
         double radius = (0.5 + Math.random()) *10e4;
-        Vector3 position = Vector3.generatePosition(Math.random());
-        Vector3 movement = Vector3.generateMovement(Math.random());
+        Vector3 position = Vector3.generatePosition();
+        Vector3 movement = Vector3.generateMovement();
         Color color = new Color((int) (128 + Math.random() * 128), (int) (128 +Math.random() * 128), (int) (128 +Math.random() * 128));
         return new AstroBody(mass, radius, position, movement, color);
     }
@@ -94,8 +94,8 @@ public class AstroBody {
     public static AstroBody generateBlackHole() {
         double mass = (1+Math.random())*10e37; // 10e37 to 10e39 kg
         double radius = Math.random()*10e5;
-        Vector3 position = Vector3.generatePosition(Math.random());
-        Vector3 movement = Vector3.generateMovement(Math.random());
+        Vector3 position = Vector3.generatePosition();
+        Vector3 movement = new Vector3(Math.random(),Math.random(),Math.random());
         Color color = new Color(255,0,255);
         return new AstroBody(mass, radius, position, movement, color);
     }
@@ -105,7 +105,7 @@ public class AstroBody {
         double mass = 1.989 * 10e30;
         double radius = 6.96e6;
         Vector3 position = center;
-        Vector3 movement = Vector3.generateMovement(Math.random());
+        Vector3 movement = Vector3.generateMovement();
         Color color = new Color(255,255,0);
         return new AstroBody(mass, radius, position, movement, color);
     }

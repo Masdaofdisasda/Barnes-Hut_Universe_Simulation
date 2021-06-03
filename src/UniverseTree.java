@@ -145,8 +145,20 @@ public class UniverseTree implements AstroBodyIterable{
         return true;
     }
 
-    public void addSolarSystem(){
-        Vector3 center = Vector3.generatePosition(Math.random());
+    public void generateUniverse(int AstroBodies, int BlackHoles, int solarSystems){
+        for (int i = 0; i < solarSystems; i++) {
+            addSolarSystem();
+        }
+        for (int i = 0; i < BlackHoles; i++) {
+            addBody(AstroBody.generateBlackHole());
+        }
+        for (int i = 0; i < AstroBodies; i++) {
+            addBody(AstroBody.generateRandomBody());
+        }
+    }
+
+    private void addSolarSystem(){
+        Vector3 center = Vector3.generatePosition();
         addBody(AstroBody.generateSunBody(center));
         for (int i = 0; i <= 8; i++) {
             addBody(AstroBody.generateOrthoBody(center));

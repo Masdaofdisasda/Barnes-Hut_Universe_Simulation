@@ -18,27 +18,22 @@ public class Vector3 {
         z = initZ;
     }
 
-    private Vector3(double seed, double max) {
-        x = (Math.random() - 0.5) * seed * max;
-        y = (Math.random() - 0.5) * seed * max;
-        z = (Math.random() - 0.5) * seed * max;
+    // creates a random Vector between min & max values
+    private Vector3(double min, double max) {
+         double seed = Math.random();
+         double delta = max-min;
+
+        x = min + (delta * (Math.random() -0.5) * seed);
+        y = min + (delta * (Math.random() -0.5) * seed);
+        z = min + (delta * (Math.random() -0.5) * seed);
     }
 
-    public static Vector3 generatePosition(double seed){
-        return new Vector3(seed, 2 * Simulation.bounds);
+    public static Vector3 generatePosition(){ return new Vector3(Double.MIN_VALUE, 2 * Simulation.bounds); }
+    public static Vector3 generateMovement(){
+        return new Vector3(5e6, 5e8);
     }
-
-    public static Vector3 generateMovement(double seed){
-        return new Vector3(seed, 5e8);
-    }
-
-    public static Vector3 generateOrthoPos(Vector3 center) {
-        return new Vector3(center.x + Math.random() * 6e4,center.y,center.z);
-    }
-
-    public static Vector3 generateOrthoMov(){
-        return new Vector3(0, Math.random() * 5e4, 0);
-    }
+    public static Vector3 generateOrthoPos(Vector3 center) { return new Vector3(center.x + Math.random() * 6e4,center.y,center.z); }
+    public static Vector3 generateOrthoMov(){ return new Vector3(0, Math.random() * 5e4, 0); }
 
     // Returns the sum of this vector and vector 'v'.
     public Vector3 plus(Vector3 v) {
@@ -78,13 +73,11 @@ public class Vector3 {
 
     // Returns the length (norm) of this vector.
     public double length() {
-
         return distanceTo(new Vector3());
     }
 
     // Normalizes this vector: changes the length of this vector such that it becomes 1.
     public void normalize() {
-
         double norm = this.length();
         x /= norm;
         y /= norm;
@@ -93,7 +86,6 @@ public class Vector3 {
 
     public static Vector3 weightedPosition(double[] masses, Vector3[] position){
         if (masses == null){ return null; }
-
         double x = 0;
         double y = 0;
         double z = 0;
@@ -117,8 +109,16 @@ public class Vector3 {
 
     // Zeichnet and der x,y Position einen Körper. Die z-Achse skaliert den Körper
     public void drawAsDot(double radius, Color color) {
-        double zScale = 1.5e10;   // 1e10-3e10
-        radius = radius * ((z-5e10)/zScale);
+        //double zScale = 1.5e10;   // 1e10-3e10
+        //radius = radius * ((z-5e10)/zScale);
+
+
+        double min = 2e7;
+        double max = 2e10;
+        double k = (max-min)/(1e11);
+        double d = max-k*Simulation.bounds;
+        double zScale = k*z+d;
+        radius = (radius /10e5) * zScale ; //2e7;
 
         StdDraw.setPenColor(color);
         StdDraw.filledCircle(x, y, Math.abs(radius));
