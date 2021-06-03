@@ -233,6 +233,7 @@ public class UniverseTree implements AstroBodyIterable{
         }
 
         //should not happen
+        System.out.println("should not happen");
         return null;
     }
 

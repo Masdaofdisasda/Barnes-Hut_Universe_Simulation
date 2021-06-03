@@ -67,8 +67,7 @@ public class Vector3 {
 
     // Returns the Euclidean distance of this vector
     public double distanceTo(Vector3 v) {
-        //double a = Math.sqrt((this.x - v.x) * (this.x - v.x) + (this.y - v.y) * (this.y - v.y) + (this.z - v.z) * (this.z - v.z));
-        return (this.x -(v.x) + this.y - (v.y) + this.z - (v.z));
+        return Math.sqrt((this.x - v.x) * (this.x - v.x) + (this.y - v.y) * (this.y - v.y) + (this.z - v.z) * (this.z - v.z));
     }
 
     // Returns the length (norm) of this vector.
