@@ -77,6 +77,7 @@ public class Simulation {
                 observableUniverse.drawSystem();
                 StdDraw.text(Simulation.bounds * -0.8,Simulation.bounds * -0.9,"Bodies: "+ observableUniverse.getCount());
                 StdDraw.text(Simulation.bounds * -0.6,Simulation.bounds * -0.9, "max depth: " +  observableUniverse.getDepth());
+                System.out.println("max depth: " +  observableUniverse.getDepth());
                 StdDraw.show();
             }
             seconds++;
