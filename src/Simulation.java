@@ -70,9 +70,13 @@ public class Simulation {
             // draw new positions
             if (seconds % 1 == 0) {
                 // clear old positions (exclude the following line if you want to draw orbits).
+
+                int depth = 0;
+
                 StdDraw.clear(StdDraw.BLACK);
                 observableUniverse.drawSystem();
                 StdDraw.text(Simulation.bounds * -0.8,Simulation.bounds * -0.9,"Bodies: "+ observableUniverse.getCount());
+                StdDraw.text(Simulation.bounds * -0.6,Simulation.bounds * -0.9, "max depth: " +  observableUniverse.getDepth());
                 StdDraw.show();
             }
             seconds++;

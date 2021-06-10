@@ -316,6 +316,28 @@ public class UniverseTree implements AstroBodyIterable{
 
     }
 
+    public int getDepth(){
+
+        if (isEmpty()){return 0;}
+
+        if (root == null) {
+
+            int maxDepth = depth;
+
+            if (children != null) {
+                for (int i = 0; i < 8; i++) {
+                    if (children[i] != null) {
+                        maxDepth = children[i].getDepth();
+                    }
+                }
+            }
+
+            return maxDepth;
+        }else {
+            return depth;
+        }
+    }
+
 
 }
 
